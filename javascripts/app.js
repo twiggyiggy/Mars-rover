@@ -8,8 +8,6 @@ bonus: enforce boundaries................OK
 bonus: moving backwards..................OK
 bonus: validate inputs...................OK
 bonus: obstacles.........................NO
-
-Testing down below...
 */
 
 // Rover Object Goes Here
@@ -22,9 +20,10 @@ var rover = {
 };
 // ======================
 
-/********** CHECK COORDINATES & DIRECTION **********/
+/***** CHECK COORDINATES & DIRECTION *****/
 function whereIsRover() {
-  console.log("Rover's direction: " + rover.direction + "\nRover's coordinates: [" + rover.x + ", " + rover.y + "]");
+  //console.log("Rover's direction: " + rover.direction + "\nRover's coordinates: [" + rover.x + ", " + rover.y + "]");
+  console.log(`Rover's position: facing ${rover.direction}, [${rover.x}, ${rover.y}]`)
 }
 
 /********** TURN LEFT **********/
@@ -72,89 +71,108 @@ function turnRight(rover){
 }
 
 
-/********** MOVE FORWARD **********/
+/********** MOVE FORWARDS **********/
+const outOfBounds = () => console.log("Error, out of bounds!");
+const forwardMessage = () => console.log("---Roger that. Moving forward!---");
+/*
 function moveForwards(rover){
-  console.log("---Roger that. Moving forward!---");
 
   switch (rover.direction) {
     case "N":
       if (rover.y > 0) {
+        forwardMessage();
         clearOldPosition();
         rover.y -= 1;
         setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far North! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "S":
       if (rover.y < 9) {
+        forwardMessage();
         clearOldPosition();
         rover.y += 1;
         setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far South! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "W":
       if (rover.x > 0) {
+        forwardMessage();
         clearOldPosition();
         rover.x -= 1;
         setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far West! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "E":
         if (rover.x < 9) {
+          forwardMessage();
           clearOldPosition();
           rover.x += 1;
           setNewPosition();
           whereIsRover();
         } else {
-          console.log("Can't go so far East! Stay within limits!");
+          outOfBounds();
         }
       break;
   }
 }
+*/
 
 /********** MOVE BACKWARDS **********/
-function moveBackwards(rover){
-  console.log("---Roger that. Moving backwards!---");
+const backwardsMessage = () => console.log("---Roger that. Moving backwards!---");
 
+function moveBackwards(rover){
   switch (rover.direction) {
     case "N":
       if (rover.y < 9) {
+        backwardsMessage();
+        clearOldPosition();
         rover.y += 1;
+        setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far South! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "S":
       if (rover.y > 0) {
+        backwardsMessage();
+        clearOldPosition();
         rover.y -= 1;
+        setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far North! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "W":
       if (rover.x < 9) {
+        backwardsMessage();
+        clearOldPosition();
         rover.x += 1;
+        setNewPosition();
         whereIsRover();
       } else {
-        console.log("Can't go so far East! Stay within limits!");
+        outOfBounds();
       }
       break;
     case "E":
         if (rover.x > 0) {
+          backwardsMessage();
+          clearOldPosition();
           rover.x -= 1;
+          setNewPosition();
           whereIsRover();
         } else {
-          console.log("Can't go so far West! Stay within limits!");
+          outOfBounds();
         }
       break;
   }
@@ -179,23 +197,18 @@ function commands(letters) {
     } else if (letters[i] === "l") {
       turnLeft(rover);
     } else {
-      console.log("Invalid coordinates! Try valid ones: (r)right, (l)eft, (f)orward, (b)ackwards...");
+      console.log("Invalid coordinates! Try: (r)right, (l)eft, (f)orward, (b)ackwards.");
     }
   }
+
   if (rover.travelLog.length === 0) {
     console.log("Travel Log empty...")
   } else {
     console.log("Travel Log: " + rover.travelLog);
   }
+
+  printBoard();
 }
-
-/********* TESTING  *********/
-
-//whereIsRover(rover);
-//turnLeft(rover);
-//turnRight(rover);
-//moveForward(rover);
-//commands("rff");
 
 /***** OBSTACLES *****/
 
@@ -204,12 +217,12 @@ let board = [
   [' ',' ','X',' ',' ',' ',' ',' ',' ',' '],
   [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
   [' ',' ',' ','X',' ',' ',' ','X','X','X'],
-  [' ',' ',' ','X',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ','X',' ','X',' ',' ',' ',' '],
+  ['X',' ',' ','X',' ',' ',' ',' ',' ','X'],
+  ['X',' ',' ','X',' ','X',' ',' ',' ','X'],
   ['X','X',' ',' ',' ','X',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ','X',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+  ['X','X',' ',' ',' ','X',' ',' ',' ',' '],
+  [' ','X',' ',' ',' ',' ',' ','X',' ',' '],
+  [' ',' ',' ','X','X','X',' ','X','X',' '],
 ];
 
 const printBoard = () => console.log(board.join('\n'));
@@ -222,12 +235,70 @@ const setNewPosition = () => {
   board[rover.y][rover.x] = 'R';
 }
 
-//Move Rover, facing East, forward 1 from [2,1] to [3,1] - first is X axis, then Y axis, then update previous square as empty
-//board[y][x] = board[x][y] => the coordinates X,Y are inverted, because of counting first nested arrays (Y), then elements in nested array (X)
-board[1][3] = board[1][2]; // => X incremented by 1, Y stays the same
-board[1][2] = ' '; // the square the rover was previously on is now asssigned an empty string
-// When rover moves forward East: rover moves as before, but implement function updateBoard()
-// updateBoard will take 2 parameters: mars.x, mars.y
+const obstacleMessage = () => console.log("SIR, an obstacle ahead, we CAN'T go any further!");
+dfssdf
+
+/* Trying things out! */
 
 
-// TWO FUNCTIONS MOTHERFUCKER!
+function moveForwards(rover){
+
+  switch (rover.direction) {
+    case "N":
+      if (rover.y > 0) {
+        if (board[rover.y-1][rover.x] === 'X') { // This should be able to work, why doesn't it?
+          obstacleMessage();
+        } else {
+          forwardMessage();
+          clearOldPosition();
+          rover.y -= 1;
+          setNewPosition();
+          whereIsRover();
+        }
+      } else {
+        outOfBounds();
+      }
+      break;
+    case "S":
+      if (rover.y < 9) {
+        forwardMessage();
+        clearOldPosition();
+        rover.y += 1;
+        setNewPosition();
+        whereIsRover();
+      } else {
+        outOfBounds();
+      }
+      break;
+    case "W":
+      if (rover.x > 0) {
+        forwardMessage();
+        clearOldPosition();
+        rover.x -= 1;
+        setNewPosition();
+        whereIsRover();
+      } else {
+        outOfBounds();
+      }
+      break;
+    case "E":
+        if (rover.x < 9) {
+          if (board[rover.y][rover.x+1] === 'X') {
+            obstacleMessage();
+          } else {
+            forwardMessage();
+            clearOldPosition();
+            rover.x += 1;
+            setNewPosition();
+            whereIsRover();
+          }
+        } else {
+          outOfBounds();
+        }
+      break;
+  }
+}
+
+
+
+printBoard();
