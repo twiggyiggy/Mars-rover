@@ -210,7 +210,7 @@ function commands(letters) {
   printBoard();
 }
 
-/***** OBSTACLES *****/
+/***** BOARD AND OBSTACLES *****/
 
 let board = [
   ['R',' ','X',' ','X','X','X',' ',' ',' '],
@@ -225,6 +225,7 @@ let board = [
   [' ',' ',' ','X','X','X',' ','X','X',' '],
 ];
 
+// FUNCTION TO PRINT THE BOARD, UPDATE THE SQUARES, OBSTACLE MESSAGE
 const printBoard = () => console.log(board.join('\n'));
 
 const clearOldPosition = () => {
@@ -236,7 +237,7 @@ const setNewPosition = () => {
 }
 
 const obstacleMessage = () => console.log("SIR, an obstacle ahead, we CAN'T go any further!");
-dfssdf
+
 
 /* Trying things out! */
 
